@@ -2,7 +2,7 @@
 
 A boppin' little desktop widget for [Noctalia Shell](https://github.com/noctalia-dev/noctalia) that displays the latest active **Bang Dream! Girls Band Party!** English (EN) server event and its featured cards.
 
-![Layout Preview](https://bestdori.com/assets/en/homebanner_rip/banner_event307.png) *(Example Banner)*
+![screenshot](screenshot.png)
 
 ## ⚡ Features
 
