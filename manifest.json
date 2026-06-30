@@ -5,7 +5,7 @@
   "minNoctaliaVersion": "3.6.0",
   "author": "nocturne-neko",
   "license": "MIT",
-  "description": "Desktop widget for the latest Bang Dream EN event from Bestdori",
+  "description": "Desktop widget for the latest Bang Dream event from Bestdori (JP/EN/TW/CN)",
   "entryPoints": {
     "main": "Main.qml",
     "desktopWidget": "DesktopWidget.qml",
