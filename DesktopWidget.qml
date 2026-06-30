@@ -102,10 +102,18 @@ DraggableDesktopWidget {
             }
         }
 
-        // 3. Info Row
+        // 3 & 4. Info + Cards — layout depends on card count
+        // cards <= 3: type+band left, cards right (old layout)
+        // cards >  3: type+band in one centered row, cards centered below
+
+        readonly property bool manyCards: root.event && root.event.cards && root.event.cards.length > 3
+
+        // --- OLD layout (cards <= 3): type+band stacked left, cards below ---
         RowLayout {
             width: parent.width
             spacing: 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: !!root.event && !mainColumn.manyCards
 
             // Left side: Type + Attribute Icon + Band
             ColumnLayout {
@@ -139,7 +147,6 @@ DraggableDesktopWidget {
 
                 RowLayout {
                     spacing: 6
-                    visible: !!root.event
 
                     Rectangle {
                         Layout.preferredWidth: 18
@@ -168,15 +175,15 @@ DraggableDesktopWidget {
 
             // Right side: Character Card Icons
             Row {
-                spacing: -8
+                spacing: 4
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
                 Repeater {
                     model: root.event ? root.event.cards : 0
 
                     delegate: Rectangle {
-                        width: 32
-                        height: 32
+                        width: 40
+                        height: 40
                         color: Color.mSurface
                         border.width: 1
                         border.color: Color.mOutline
@@ -186,14 +193,100 @@ DraggableDesktopWidget {
                         Image {
                             anchors.fill: parent
                             source: modelData.iconUrl
-                            sourceSize.width: 30
-                            sourceSize.height: 30
+                            sourceSize.width: 38
+                            sourceSize.height: 38
                             fillMode: Image.PreserveAspectFit
                             smooth: true
                         }
                     }
                 }
             }
+        }
+
+        // --- NEW layout (cards > 3): type+band centered row, cards below ---
+
+        // Type + Band in one centered row
+        RowLayout {
+            spacing: Style.marginL
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: !!root.event && mainColumn.manyCards
+
+            // Event Type & Attribute
+            RowLayout {
+                spacing: 6
+                Layout.alignment: Qt.AlignVCenter
+
+                Rectangle {
+                    Layout.preferredWidth: 18
+                    Layout.preferredHeight: 18
+                    color: "transparent"
+
+                    Image {
+                        anchors.fill: parent
+                        source: root.event ? root.event.attributeIconUrl : ""
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        visible: source.toString() !== ""
+                    }
+                }
+
+                NText {
+                    text: root.event ? root.event.eventTypeDisplay : ""
+                    font.weight: Font.DemiBold
+                    font.pointSize: Style.fontSizeS
+                    color: Color.mPrimary
+                }
+            }
+
+            // Band Name (no icon needed for stacked layout)
+            RowLayout {
+                spacing: 6
+                Layout.alignment: Qt.AlignVCenter
+
+                NText {
+                    text: root.event ? root.event.bandName : ""
+                    font.weight: Font.DemiBold
+                    font.pointSize: Style.fontSizeS - 1
+                    color: Color.mOnSurfaceVariant
+                }
+            }
+        }
+
+        // Cards centered below (new layout only)
+        Row {
+            spacing: 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: !!root.event && mainColumn.manyCards && root.event.cards && root.event.cards.length > 0
+
+            Repeater {
+                model: root.event ? root.event.cards : 0
+
+                delegate: Rectangle {
+                    width: 40
+                    height: 40
+                    color: Color.mSurface
+                    border.width: 1
+                    border.color: Color.mOutline
+                    radius: 6
+                    clip: true
+
+                    Image {
+                        anchors.fill: parent
+                        source: modelData.iconUrl
+                        sourceSize.width: 38
+                        sourceSize.height: 38
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                    }
+                }
+            }
+        }
+
+        // Extra bottom margin for manyCards layout
+        Item {
+            width: 1
+            height: Style.marginS
+            visible: mainColumn.manyCards
         }
     }
 }
