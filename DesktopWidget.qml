@@ -16,6 +16,9 @@ DraggableDesktopWidget {
     readonly property var event: root.pluginApi?.mainInstance?.eventData
     readonly property bool isLoading: root.pluginApi?.mainInstance?.loading ?? false
     readonly property string errorMsg: root.pluginApi?.mainInstance?.errorMsg ?? ""
+    readonly property int serverIndex: root.pluginApi?.mainInstance?.serverIndex ?? 1
+    readonly property var serverNames: ["JP", "EN", "TW", "CN"]
+    readonly property string serverName: serverNames[serverIndex] ?? "EN"
 
     function formatTime(ms) {
         if (!ms) return "";
@@ -60,16 +63,9 @@ DraggableDesktopWidget {
 
             NText {
                 anchors.centerIn: parent
-                anchors.topMargin: 20
-                text: {
-                    if (root.isLoading && bannerImage.status !== Image.Ready)
-                        return "Fetching latest event...";
-                    if (root.errorMsg)
-                        return root.errorMsg;
-                    return "";
-                }
-                color: root.errorMsg ? Color.mError : Color.mOnSurfaceVariant
-                visible: bannerImage.status !== Image.Ready
+                text: root.errorMsg
+                color: Color.mError
+                visible: root.errorMsg !== "" && bannerImage.status !== Image.Ready
                 font.pointSize: Style.fontSizeS
             }
         }
@@ -82,7 +78,13 @@ DraggableDesktopWidget {
             NText {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
-                text: root.event ? root.event.eventName : ""
+                text: {
+                    if (root.isLoading && !root.event)
+                        return "Fetching " + root.serverName + " Event..."
+                    if (root.event)
+                        return root.event.eventName
+                    return ""
+                }
                 font.weight: Font.DemiBold
                 font.pointSize: Style.fontSizeS
                 elide: Text.ElideRight
@@ -94,7 +96,7 @@ DraggableDesktopWidget {
             NText {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
-                text: root.event ? (formatTime(root.event.startAt) + " ~ " + formatTime(root.event.endAt)) : ""
+                text: root.event && !root.isLoading ? (formatTime(root.event.startAt) + " ~ " + formatTime(root.event.endAt)) : ""
                 font.pointSize: Style.fontSizeS - 1
                 color: Color.mOnSurfaceVariant
             }
@@ -165,17 +167,17 @@ DraggableDesktopWidget {
             Item { Layout.fillWidth: true }
 
             // Right side: Character Card Icons
-            RowLayout {
-                spacing: 4
+            Row {
+                spacing: -8
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
                 Repeater {
                     model: root.event ? root.event.cards : 0
 
                     delegate: Rectangle {
-                        width: 40
-                        height: 40
-                        color: "transparent"
+                        width: 32
+                        height: 32
+                        color: Color.mSurface
                         border.width: 1
                         border.color: Color.mOutline
                         radius: 6
@@ -184,8 +186,8 @@ DraggableDesktopWidget {
                         Image {
                             anchors.fill: parent
                             source: modelData.iconUrl
-                            sourceSize.width: 38
-                            sourceSize.height: 38
+                            sourceSize.width: 30
+                            sourceSize.height: 30
                             fillMode: Image.PreserveAspectFit
                             smooth: true
                         }

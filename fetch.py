@@ -78,21 +78,30 @@ def get_asset_url(url):
 
 
 def main():
+    # Server index: JP=0, EN=1, TW=2, CN=3 (skip KR=4, EOS)
+    server_index = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+    server_names = {0: "JP", 1: "EN", 2: "TW", 3: "CN"}
+    server_name = server_names.get(server_index, "EN")
+
+    # Region code for asset URLs
+    server_regions = {0: "jp", 1: "en", 2: "tw", 3: "cn"}
+    region = server_regions.get(server_index, "en")
+
     # 1. Get recent news (never cached)
     news = get_api("/api/news/dynamic/recent.json", cache=False)
     events = news.get("events", {})
 
-    # 2. Find most recent EN event
+    # 2. Find most recent event for selected server
     latest_id = None
     latest_start = 0
     for eid, ev in events.items():
-        en_start = ev.get("startAt", [None, None])[1]
-        if en_start and int(en_start) > latest_start:
-            latest_start = int(en_start)
+        ev_start = ev.get("startAt", [None, None, None, None, None])
+        if server_index < len(ev_start) and ev_start[server_index] and int(ev_start[server_index]) > latest_start:
+            latest_start = int(ev_start[server_index])
             latest_id = eid
 
     if not latest_id:
-        print(json.dumps({"error": "no EN event found"}))
+        print(json.dumps({"error": f"no {server_name} event found"}))
         return
 
     # 3. Fetch event details (cached)
@@ -100,10 +109,10 @@ def main():
 
     event_type = event.get("eventType", "")
     banner_name = event.get("bannerAssetBundleName", "")
-    banner_remote = f"{BASE}/assets/en/homebanner_rip/{banner_name}.png"
+    banner_remote = f"{BASE}/assets/{region}/homebanner_rip/{banner_name}.png"
     banner_url = get_asset_url(banner_remote)
 
-    event_name = event.get("eventName", [None] * 5)[1] or event.get("eventName", [None])[0] or ""
+    event_name = event.get("eventName", [None] * 5)[server_index] or event.get("eventName", [None])[0] or ""
 
     # Attribute
     attributes = event.get("attributes", [])
@@ -159,7 +168,7 @@ def main():
             card = get_api(f"/api/cards/{sid}.json")
             resource_set = card.get("resourceSetName", "")
             chunk_id = str(int(sid) // 50).zfill(5)
-            icon_remote = f"{BASE}/assets/en/thumb/chara/card{chunk_id}_rip/{resource_set}_normal.png"
+            icon_remote = f"{BASE}/assets/{region}/thumb/chara/card{chunk_id}_rip/{resource_set}_normal.png"
             icon_url = get_asset_url(icon_remote)
             cards.append({
                 "situationId": sid,
@@ -185,8 +194,9 @@ def main():
         "bandName": band_name,
         "bandIconUrl": band_icon_url,
         "cards": cards,
-        "startAt": event.get("startAt", [None, None])[1],
-        "endAt": event.get("endAt", [None, None])[1],
+        "server": server_name,
+        "startAt": event.get("startAt", [None, None, None, None, None])[server_index],
+        "endAt": event.get("endAt", [None, None, None, None, None])[server_index],
     }
     print(json.dumps(result))
 

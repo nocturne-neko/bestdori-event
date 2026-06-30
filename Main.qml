@@ -12,7 +12,21 @@ Item {
     property bool loading: false
     property string errorMsg: ""
 
+    // Server selection from settings
+    property int serverIndex: pluginApi?.pluginSettings?.serverIndex ?? 1
+
+    onServerIndexChanged: {
+        if (pluginApi?.pluginSettings) {
+            pluginApi.pluginSettings.serverIndex = serverIndex;
+            pluginApi.saveSettings();
+        }
+        root.fetch();
+    }
+
     readonly property string pluginDir: pluginApi?.pluginDir ?? ""
+
+    // Server names for display
+    readonly property var serverNames: ["JP", "EN", "TW", "CN"]
 
     // Refresh every 5 minutes
     Timer {
@@ -26,9 +40,10 @@ Item {
 
     function fetch() {
         if (fetchProcess.running) return
+        root.eventData = null  // clear stale data so loading indicator shows
         root.loading = true
         root.errorMsg = ""
-        fetchProcess.command = ["python3", root.pluginDir + "/fetch.py"]
+        fetchProcess.command = ["python3", root.pluginDir + "/fetch.py", String(root.serverIndex)]
         fetchProcess.running = true
     }
 

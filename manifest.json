@@ -2,18 +2,21 @@
   "id": "bestdori-event",
   "name": "Bestdori Event",
   "version": "1.0.0",
-  "author": "Neko",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "nocturne-neko",
   "license": "MIT",
-  "description": "Displays the most recent Bang Dream! EN event and cards.",
-  "tags": [
-    "Desktop",
-    "Anime"
-  ],
+  "description": "Desktop widget for the latest Bang Dream EN event from Bestdori",
   "entryPoints": {
     "main": "Main.qml",
-    "desktopWidget": "DesktopWidget.qml"
+    "desktopWidget": "DesktopWidget.qml",
+    "settings": "Settings.qml"
   },
   "dependencies": {
     "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "serverIndex": 1
+    }
   }
 }
