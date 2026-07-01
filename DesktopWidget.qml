@@ -219,7 +219,7 @@ DraggableDesktopWidget {
                         text: root.event ? root.event.eventTypeDisplay : ""
                         font.weight: Font.DemiBold
                         font.pointSize: Style.fontSizeS
-                        color: Color.mPrimary
+                        color: Color.mSecondary
                     }
                 }
 
@@ -244,7 +244,7 @@ DraggableDesktopWidget {
                         text: root.event ? root.event.bandName : ""
                         font.weight: Font.DemiBold
                         font.pointSize: Style.fontSizeS - 1
-                        color: Color.mOnSurfaceVariant
+                        color: Color.mSecondary
                     }
                 }
             }
@@ -336,7 +336,7 @@ DraggableDesktopWidget {
                     text: root.event ? root.event.eventTypeDisplay : ""
                     font.weight: Font.DemiBold
                     font.pointSize: Style.fontSizeS
-                    color: Color.mPrimary
+                    color: Color.mSecondary
                 }
             }
 
@@ -349,7 +349,7 @@ DraggableDesktopWidget {
                     text: root.event ? root.event.bandName : ""
                     font.weight: Font.DemiBold
                     font.pointSize: Style.fontSizeS - 1
-                    color: Color.mOnSurfaceVariant
+                    color: Color.mSecondary
                 }
             }
         }
