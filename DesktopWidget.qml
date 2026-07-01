@@ -273,11 +273,11 @@ DraggableDesktopWidget {
                         anchors.fill: parent
                         hoverEnabled: true
                         onEntered: {
-                            if (root.event && root.event.cards && root.event.cards.length > 0) {
+                            if (root.event && root.event.characters && root.event.characters.length > 0) {
                                 var charNames = [];
-                                for (var i = 0; i < root.event.cards.length; i++) {
-                                    if (root.event.cards[i].characterName) {
-                                        charNames.push(root.event.cards[i].characterName);
+                                for (var i = 0; i < root.event.characters.length; i++) {
+                                    if (root.event.characters[i].characterName) {
+                                        charNames.push(root.event.characters[i].characterName);
                                     }
                                 }
                                 if (charNames.length > 0) {
@@ -401,11 +401,11 @@ DraggableDesktopWidget {
                     anchors.fill: parent
                     hoverEnabled: true
                     onEntered: {
-                        if (root.event && root.event.cards && root.event.cards.length > 0) {
+                        if (root.event && root.event.characters && root.event.characters.length > 0) {
                             var charNames = [];
-                            for (var i = 0; i < root.event.cards.length; i++) {
-                                if (root.event.cards[i].characterName) {
-                                    charNames.push(root.event.cards[i].characterName);
+                            for (var i = 0; i < root.event.characters.length; i++) {
+                                if (root.event.characters[i].characterName) {
+                                    charNames.push(root.event.characters[i].characterName);
                                 }
                             }
                             if (charNames.length > 0) {

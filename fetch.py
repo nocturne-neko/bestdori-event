@@ -168,7 +168,30 @@ def main():
         band_icon_remote = f"{BASE}/res/icon/band_{band_id}.svg"
         band_icon_url = get_asset_url(band_icon_remote)
 
-    # 5. Fetch each member card (cached)
+    # 5. Fetch event characters with names
+    event_chars = event.get("characters", [])
+    characters = []
+    for c in event_chars:
+        cid = c.get("characterId")
+        if cid:
+            try:
+                char_data = get_api(f"/api/characters/{cid}.json")
+                char_names = char_data.get("characterName", [])
+                char_name = ""
+                if server_index < len(char_names) and char_names[server_index]:
+                    char_name = char_names[server_index]
+                elif char_names:
+                    char_name = char_names[0]  # fallback to JP
+                
+                if char_name:
+                    characters.append({
+                        "characterId": cid,
+                        "characterName": char_name
+                    })
+            except Exception:
+                pass
+
+    # 6. Fetch each member card (cached)
     members = event.get("members", [])
     cards = []
     for m in members:
@@ -227,6 +250,7 @@ def main():
         "bandId": band_id,
         "bandName": band_name,
         "bandIconUrl": band_icon_url,
+        "characters": characters,
         "cards": cards,
         "server": server_name,
         "startAt": event.get("startAt", [None, None, None, None, None])[server_index],
