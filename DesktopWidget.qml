@@ -103,6 +103,17 @@ DraggableDesktopWidget {
                 visible: status === Image.Ready
                 opacity: visible ? 1.0 : 0.0
                 Behavior on opacity { NumberAnimation { duration: 250 } }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: root.event ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    enabled: root.event
+                    onClicked: {
+                        if (root.event && root.event.eventId) {
+                            Qt.openUrlExternally("https://bestdori.com/info/events/" + root.event.eventId);
+                        }
+                    }
+                }
             }
 
             NBusyIndicator {
@@ -139,7 +150,18 @@ DraggableDesktopWidget {
                 elide: Text.ElideRight
                 maximumLineCount: 2
                 wrapMode: Text.WordWrap
-                color: Color.mOnSurface
+                color: Color.mPrimary
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: root.event ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    enabled: root.event
+                    onClicked: {
+                        if (root.event && root.event.eventId) {
+                            Qt.openUrlExternally("https://bestdori.com/info/events/" + root.event.eventId);
+                        }
+                    }
+                }
             }
 
             Rectangle {
@@ -243,7 +265,7 @@ DraggableDesktopWidget {
                     NText {
                         text: root.event ? root.event.bandName : ""
                         font.weight: Font.DemiBold
-                        font.pointSize: Style.fontSizeS - 1
+                        font.pointSize: Style.fontSizeS
                         color: Color.mSecondary
                     }
                 }
@@ -352,7 +374,7 @@ DraggableDesktopWidget {
                 NText {
                     text: root.event ? root.event.bandName : ""
                     font.weight: Font.DemiBold
-                    font.pointSize: Style.fontSizeS - 1
+                    font.pointSize: Style.fontSizeS
                     color: Color.mSecondary
                 }
             }
