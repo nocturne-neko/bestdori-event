@@ -16,7 +16,8 @@
   },
   "metadata": {
     "defaultSettings": {
-      "serverIndex": 1
+      "serverIndex": 1,
+      "displayLanguage": -1
     }
   }
 }

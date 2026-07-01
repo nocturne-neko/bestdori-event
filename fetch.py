@@ -91,8 +91,10 @@ def get_asset_url(url):
 def main():
     # Server index: JP=0, EN=1, TW=2, CN=3 (skip KR=4, EOS)
     server_index = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+    display_language = int(sys.argv[2]) if len(sys.argv) > 2 else server_index
     server_names = {0: "JP", 1: "EN", 2: "TW", 3: "CN"}
     server_name = server_names.get(server_index, "EN")
+    display_name = server_names.get(display_language, "EN")
 
     # Region code for asset URLs
     server_regions = {0: "jp", 1: "en", 2: "tw", 3: "cn"}
@@ -123,7 +125,7 @@ def main():
     banner_remote = f"{BASE}/assets/{region}/homebanner_rip/{banner_name}.png"
     banner_url = get_asset_url(banner_remote)
 
-    event_name = event.get("eventName", [None] * 5)[server_index] or event.get("eventName", [None])[0] or ""
+    event_name = event.get("eventName", [None] * 5)[display_language] or event.get("eventName", [None])[0] or ""
 
     # Attribute
     attributes = event.get("attributes", [])
@@ -178,8 +180,8 @@ def main():
                 char_data = get_api(f"/api/characters/{cid}.json")
                 char_names = char_data.get("characterName", [])
                 char_name = ""
-                if server_index < len(char_names) and char_names[server_index]:
-                    char_name = char_names[server_index]
+                if display_language < len(char_names) and char_names[display_language]:
+                    char_name = char_names[display_language]
                 elif char_names:
                     char_name = char_names[0]  # fallback to JP
                 
@@ -213,8 +215,8 @@ def main():
                 try:
                     char_data = get_api(f"/api/characters/{char_id}.json")
                     char_names = char_data.get("characterName", [])
-                    if server_index < len(char_names) and char_names[server_index]:
-                        char_name = char_names[server_index]
+                    if display_language < len(char_names) and char_names[display_language]:
+                        char_name = char_names[display_language]
                     elif char_names:
                         char_name = char_names[0]  # fallback to JP
                     
