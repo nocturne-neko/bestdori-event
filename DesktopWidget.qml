@@ -268,6 +268,25 @@ DraggableDesktopWidget {
                         font.pointSize: Style.fontSizeS
                         color: Color.mSecondary
                     }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: {
+                            if (root.event && root.event.cards && root.event.cards.length > 0) {
+                                var charNames = [];
+                                for (var i = 0; i < root.event.cards.length; i++) {
+                                    if (root.event.cards[i].characterName) {
+                                        charNames.push(root.event.cards[i].characterName);
+                                    }
+                                }
+                                if (charNames.length > 0) {
+                                    TooltipService.show(parent, charNames.join(", "), "auto");
+                                }
+                            }
+                        }
+                        onExited: TooltipService.hide()
+                    }
                 }
             }
 
@@ -376,6 +395,25 @@ DraggableDesktopWidget {
                     font.weight: Font.DemiBold
                     font.pointSize: Style.fontSizeS
                     color: Color.mSecondary
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        if (root.event && root.event.cards && root.event.cards.length > 0) {
+                            var charNames = [];
+                            for (var i = 0; i < root.event.cards.length; i++) {
+                                if (root.event.cards[i].characterName) {
+                                    charNames.push(root.event.cards[i].characterName);
+                                }
+                            }
+                            if (charNames.length > 0) {
+                                TooltipService.show(parent, charNames.join(", "), "auto");
+                            }
+                        }
+                    }
+                    onExited: TooltipService.hide()
                 }
             }
         }
