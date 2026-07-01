@@ -277,7 +277,9 @@ DraggableDesktopWidget {
                                 var charNames = [];
                                 for (var i = 0; i < root.event.characters.length; i++) {
                                     if (root.event.characters[i].characterName) {
-                                        charNames.push(root.event.characters[i].characterName);
+                                        var fullName = root.event.characters[i].characterName;
+                                        var firstName = fullName.split(" ")[0];
+                                        charNames.push(firstName);
                                     }
                                 }
                                 if (charNames.length > 0) {
@@ -405,7 +407,9 @@ DraggableDesktopWidget {
                             var charNames = [];
                             for (var i = 0; i < root.event.characters.length; i++) {
                                 if (root.event.characters[i].characterName) {
-                                    charNames.push(root.event.characters[i].characterName);
+                                    var fullName = root.event.characters[i].characterName;
+                                    var firstName = fullName.split(" ")[0];
+                                    charNames.push(firstName);
                                 }
                             }
                             if (charNames.length > 0) {
