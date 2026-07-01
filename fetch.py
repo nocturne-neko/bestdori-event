@@ -14,6 +14,17 @@ import urllib.request
 import urllib.error
 
 BASE = "https://bestdori.com"
+
+# Event type mapping (human-readable names)
+EVENT_TYPE_MAP = {
+    "story": "Normal",
+    "versus": "VS Live",
+    "mission_live": "Mission Live",
+    "challenge": "Challenge Live",
+    "live_try": "Live Goals",
+    "medley": "Medley Live",
+    "festival": "Team Live",
+}
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_API = os.path.join(SCRIPT_DIR, "cache", "api")
 CACHE_ASSETS = os.path.join(SCRIPT_DIR, "cache", "assets")
@@ -202,7 +213,7 @@ def main():
         "eventId": latest_id,
         "eventName": event_name,
         "eventType": event_type,
-        "eventTypeDisplay": event_type.replace("_", " ").upper(),
+        "eventTypeDisplay": EVENT_TYPE_MAP.get(event_type, event_type.replace("_", " ").title()),
         "bannerUrl": banner_url,
         "attribute": attribute,
         "attributeIconUrl": attribute_icon_url,
