@@ -21,6 +21,7 @@ A boppin' little desktop widget for [Noctalia Shell](https://github.com/noctalia
 ## 🖥️ Settings
 
 - **Game Server**: Choose between Japanese, English, Taiwanese, or Chinese servers.
+- **Display Language**: Choose which language to display event/character names in. Set to "Auto" to match your selected server, or pick a specific language (JP/EN/TW/CN) independently.
 
 ## 📂 File Structure
 
