@@ -16,7 +16,7 @@ Item {
     property int serverIndex: pluginApi?.pluginSettings?.serverIndex ?? 1
 
     onServerIndexChanged: {
-        if (pluginApi?.pluginSettings) {
+        if (pluginApi?.pluginSettings && pluginApi.pluginSettings.serverIndex !== serverIndex) {
             pluginApi.pluginSettings.serverIndex = serverIndex;
             pluginApi.saveSettings();
         }
