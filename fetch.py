@@ -182,9 +182,10 @@ def main():
             icon_remote = f"{BASE}/assets/{region}/thumb/chara/card{chunk_id}_rip/{resource_set}_normal.png"
             icon_url = get_asset_url(icon_remote)
             
-            # Fetch character name
+            # Fetch character name and band
             char_id = card.get("characterId")
             char_name = ""
+            char_band_name = ""
             if char_id:
                 try:
                     char_data = get_api(f"/api/characters/{char_id}.json")
@@ -193,6 +194,11 @@ def main():
                         char_name = char_names[server_index]
                     elif char_names:
                         char_name = char_names[0]  # fallback to JP
+                    
+                    # Get band name
+                    char_band_id = char_data.get("bandId")
+                    if char_band_id:
+                        char_band_name = band_names.get(char_band_id, "")
                 except Exception:
                     pass
             
@@ -203,6 +209,7 @@ def main():
                 "attribute": card.get("attribute", ""),
                 "characterId": char_id,
                 "characterName": char_name,
+                "bandName": char_band_name,
                 "rarity": card.get("rarity"),
                 "iconUrl": icon_url,
             })

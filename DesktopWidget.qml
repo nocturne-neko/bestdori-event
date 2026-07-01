@@ -284,7 +284,11 @@ DraggableDesktopWidget {
                             onClicked: Qt.openUrlExternally("https://bestdori.com/info/cards/" + modelData.situationId)
                             onEntered: {
                                 if (modelData.characterName) {
-                                    TooltipService.show(parent, modelData.characterName, "auto");
+                                    var tooltipText = modelData.characterName;
+                                    if (root.event && !root.event.bandId && modelData.bandName) {
+                                        tooltipText = modelData.bandName + " - " + modelData.characterName;
+                                    }
+                                    TooltipService.show(parent, tooltipText, "auto");
                                 }
                             }
                             onExited: TooltipService.hide()
@@ -388,7 +392,11 @@ DraggableDesktopWidget {
                         onClicked: Qt.openUrlExternally("https://bestdori.com/info/cards/" + modelData.situationId)
                             onEntered: {
                                 if (modelData.characterName) {
-                                    TooltipService.show(parent, modelData.characterName, "auto");
+                                    var tooltipText = modelData.characterName;
+                                    if (root.event && !root.event.bandId && modelData.bandName) {
+                                        tooltipText = modelData.bandName + " - " + modelData.characterName;
+                                    }
+                                    TooltipService.show(parent, tooltipText, "auto");
                                 }
                             }
                             onExited: TooltipService.hide()
