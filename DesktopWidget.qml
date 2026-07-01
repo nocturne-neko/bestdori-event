@@ -268,6 +268,27 @@ DraggableDesktopWidget {
                         font.pointSize: Style.fontSizeS
                         color: Color.mSecondary
                     }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: {
+                            if (root.event && root.event.characters && root.event.characters.length > 0) {
+                                var charNames = [];
+                                for (var i = 0; i < root.event.characters.length; i++) {
+                                    if (root.event.characters[i].characterName) {
+                                        var fullName = root.event.characters[i].characterName;
+                                        var firstName = fullName.split(" ")[0];
+                                        charNames.push(firstName);
+                                    }
+                                }
+                                if (charNames.length > 0) {
+                                    TooltipService.show(parent, charNames.join(", "), "auto");
+                                }
+                            }
+                        }
+                        onExited: TooltipService.hide()
+                    }
                 }
             }
 
@@ -376,6 +397,27 @@ DraggableDesktopWidget {
                     font.weight: Font.DemiBold
                     font.pointSize: Style.fontSizeS
                     color: Color.mSecondary
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        if (root.event && root.event.characters && root.event.characters.length > 0) {
+                            var charNames = [];
+                            for (var i = 0; i < root.event.characters.length; i++) {
+                                if (root.event.characters[i].characterName) {
+                                    var fullName = root.event.characters[i].characterName;
+                                    var firstName = fullName.split(" ")[0];
+                                    charNames.push(firstName);
+                                }
+                            }
+                            if (charNames.length > 0) {
+                                TooltipService.show(parent, charNames.join(", "), "auto");
+                            }
+                        }
+                    }
+                    onExited: TooltipService.hide()
                 }
             }
         }
