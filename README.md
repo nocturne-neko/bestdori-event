@@ -14,7 +14,8 @@ A boppin' little desktop widget for [Noctalia Shell](https://github.com/noctalia
 - **Smart Band Matching**: Analyzes the featured characters and resolves their band. Displays the band icon and name (e.g., MyGO!!!!!) or shows "Mixed" if characters are from different bands.
 - **Featured Cards**: Fetches and renders 40x40px icons for all event cards.
 - **Clickable Links**: Click the banner, event title, or card icons to open the corresponding page on Bestdori.
-- **Countdown Tooltip**: Hover over the event dates to see a live countdown — "Ends in Xd Xh Xm" for active events, "Starts in..." for upcoming, or "Event ended" for past events.
+- **Tooltips**: Hover over card icons to see character names, attribute icons to see attribute names (uppercased), or event dates to see a live countdown.
+- **Countdown Tooltip**: Shows "Ends in Xd Xh Xm" for active events, "Starts in..." for upcoming, or "Event ended" for past events.
 - **High-Speed Local Cache**: API responses and assets (images/SVGs) are cached locally in the plugin directory. The widget loads instantly and works offline!
 
 ## 🖥️ Settings
