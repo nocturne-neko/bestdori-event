@@ -262,18 +262,12 @@ DraggableDesktopWidget {
                         }
                     }
 
-                    Item {
-                        Layout.fillWidth: true
-                        implicitHeight: bandText2.height
-
-                        NText {
-                            id: bandText2
-                            anchors.centerIn: parent
-                            text: root.event ? root.event.bandName : ""
-                            font.weight: Font.DemiBold
-                            font.pointSize: Style.fontSizeS
-                            color: Color.mSecondary
-                        }
+                    NText {
+                        id: bandText2
+                        text: root.event ? root.event.bandName : ""
+                        font.weight: Font.DemiBold
+                        font.pointSize: Style.fontSizeS
+                        color: Color.mSecondary
 
                         MouseArea {
                             anchors.fill: parent
@@ -399,18 +393,12 @@ DraggableDesktopWidget {
                 spacing: 6
                 Layout.alignment: Qt.AlignVCenter
 
-                Item {
-                    Layout.fillWidth: true
-                    implicitHeight: bandText.height
-
-                    NText {
-                        id: bandText
-                        anchors.centerIn: parent
-                        text: root.event ? root.event.bandName : ""
-                        font.weight: Font.DemiBold
-                        font.pointSize: Style.fontSizeS
-                        color: Color.mSecondary
-                    }
+                NText {
+                    id: bandText
+                    text: root.event ? root.event.bandName : ""
+                    font.weight: Font.DemiBold
+                    font.pointSize: Style.fontSizeS
+                    color: Color.mSecondary
 
                     MouseArea {
                         anchors.fill: parent
