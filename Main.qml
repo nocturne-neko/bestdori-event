@@ -14,10 +14,19 @@ Item {
 
     // Server selection from settings
     property int serverIndex: pluginApi?.pluginSettings?.serverIndex ?? 1
+    property int displayLanguage: pluginApi?.pluginSettings?.displayLanguage ?? -1  // -1 = auto (match serverIndex)
 
     onServerIndexChanged: {
         if (pluginApi?.pluginSettings && pluginApi.pluginSettings.serverIndex !== serverIndex) {
             pluginApi.pluginSettings.serverIndex = serverIndex;
+            pluginApi.saveSettings();
+        }
+        root.fetch();
+    }
+
+    onDisplayLanguageChanged: {
+        if (pluginApi?.pluginSettings && pluginApi.pluginSettings.displayLanguage !== displayLanguage) {
+            pluginApi.pluginSettings.displayLanguage = displayLanguage;
             pluginApi.saveSettings();
         }
         root.fetch();
@@ -43,7 +52,8 @@ Item {
         root.eventData = null  // clear stale data so loading indicator shows
         root.loading = true
         root.errorMsg = ""
-        fetchProcess.command = ["python3", root.pluginDir + "/fetch.py", String(root.serverIndex)]
+        var displayLang = root.displayLanguage === -1 ? root.serverIndex : root.displayLanguage
+        fetchProcess.command = ["python3", root.pluginDir + "/fetch.py", String(root.serverIndex), String(displayLang)]
         fetchProcess.running = true
     }
 
