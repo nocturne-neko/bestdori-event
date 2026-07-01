@@ -13,7 +13,9 @@ A boppin' little desktop widget for [Noctalia Shell](https://github.com/noctalia
 - **Event Metadata**: Displays the event banner, type (e.g., MISSION LIVE), attribute icon (Pure, Cool, etc.), and duration.
 - **Smart Band Matching**: Analyzes the featured characters and resolves their band. Displays the band icon and name (e.g., MyGO!!!!!) or shows "Mixed" if characters are from different bands.
 - **Featured Cards**: Fetches and renders 40x40px icons for all event cards.
-- **High-Speed Local Cache**: API responses and assets (images/SVGs) are cached locally in the plugin directory. The widget loads instantly (~1.6s news check, 0ms for everything else) and works offline!
+- **Clickable Links**: Click the banner, event title, or card icons to open the corresponding page on Bestdori.
+- **Countdown Tooltip**: Hover over the event dates to see a live countdown — "Ends in Xd Xh Xm" for active events, "Starts in..." for upcoming, or "Event ended" for past events.
+- **High-Speed Local Cache**: API responses and assets (images/SVGs) are cached locally in the plugin directory. The widget loads instantly and works offline!
 
 ## 🖥️ Settings
 
@@ -24,12 +26,21 @@ A boppin' little desktop widget for [Noctalia Shell](https://github.com/noctalia
 ```
 bestdori-event/
 ├── manifest.json       # Plugin registration
-├── Main.qml            # Backend process runner & timer (updates every 5m)
-├── DesktopWidget.qml   # Clean, compact QML UI (240px height, auto-sizing)
+├── Main.qml            # Backend process runner & timer (updates daily)
+├── DesktopWidget.qml   # QML UI with dynamic height
+├── Settings.qml        # Server selection settings UI
 ├── fetch.py            # Python helper for caching & data parsing
-└── cache/              # Local cache directory
-    ├── api/            # Cached event and card JSON files
-    └── assets/         # Cached banners, attributes, band, and card icons
+├── settings.json       # Persisted settings
+├── .gitignore          # Ignores cache contents
+├── LICENSE             # MIT license
+├── README.md           # This file
+├── cache/              # Local cache directory (committed via .gitkeep)
+│   ├── .gitkeep
+│   ├── api/            # Cached event and card JSON files
+│   │   └── .gitkeep
+│   └── assets/         # Cached banners, attributes, band, and card icons
+│       └── .gitkeep
+└── screenshots/        # (or root) EN and JP screenshots
 ```
 
 ## 🛠️ How to Enable

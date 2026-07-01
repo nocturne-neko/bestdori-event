@@ -170,12 +170,28 @@ def main():
             chunk_id = str(int(sid) // 50).zfill(5)
             icon_remote = f"{BASE}/assets/{region}/thumb/chara/card{chunk_id}_rip/{resource_set}_normal.png"
             icon_url = get_asset_url(icon_remote)
+            
+            # Fetch character name
+            char_id = card.get("characterId")
+            char_name = ""
+            if char_id:
+                try:
+                    char_data = get_api(f"/api/characters/{char_id}.json")
+                    char_names = char_data.get("characterName", [])
+                    if server_index < len(char_names) and char_names[server_index]:
+                        char_name = char_names[server_index]
+                    elif char_names:
+                        char_name = char_names[0]  # fallback to JP
+                except Exception:
+                    pass
+            
             cards.append({
                 "situationId": sid,
                 "resourceSetName": resource_set,
                 "chunkId": chunk_id,
                 "attribute": card.get("attribute", ""),
-                "characterId": card.get("characterId"),
+                "characterId": char_id,
+                "characterName": char_name,
                 "rarity": card.get("rarity"),
                 "iconUrl": icon_url,
             })
@@ -197,6 +213,7 @@ def main():
         "server": server_name,
         "startAt": event.get("startAt", [None, None, None, None, None])[server_index],
         "endAt": event.get("endAt", [None, None, None, None, None])[server_index],
+        "currentTimeMs": int(time.time() * 1000)
     }
     print(json.dumps(result))
 

@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 import Quickshell
 import qs.Commons
 import qs.Modules.DesktopWidgets
+import qs.Services.UI
 import qs.Widgets
 
 DraggableDesktopWidget {
@@ -20,11 +22,58 @@ DraggableDesktopWidget {
     readonly property var serverNames: ["JP", "EN", "TW", "CN"]
     readonly property string serverName: serverNames[serverIndex] ?? "EN"
 
+    // Build timestamp from individual Date components
+    // Date.now() in QML truncates to 32-bit, so we avoid it
+    // Must use real (double), not int — int truncates to 32-bit which breaks Unix timestamps
+    property real currentTimeMs: getCurrentTimeMs()
+
+    function getCurrentTimeMs() {
+        var now = new Date();
+        // Use Date.UTC to build a proper timestamp from components
+        return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(),
+                       now.getHours(), now.getMinutes(), now.getSeconds());
+    }
+
+    Timer {
+        interval: 60000
+        running: true
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: root.currentTimeMs = root.getCurrentTimeMs()
+    }
+
     function formatTime(ms) {
         if (!ms) return "";
         var date = new Date(Number(ms));
         return date.toLocaleDateString(Qt.locale(), "MMM d") + " " +
                date.toLocaleTimeString(Qt.locale(), "HH:mm");
+    }
+
+    function getCountdownText() {
+        if (!root.event) return "";
+
+        var startMs = Number(root.event.startAt);
+        var endMs = Number(root.event.endAt);
+        var nowMs = root.currentTimeMs;
+
+        if (nowMs < startMs) {
+            // Event hasn't started
+            var diffMs = startMs - nowMs;
+            var days = Math.floor(diffMs / 86400000);
+            var hours = Math.floor((diffMs % 86400000) / 3600000);
+            var mins = Math.floor((diffMs % 3600000) / 60000);
+            return "Starts in " + days + "d " + hours + "h " + mins + "m";
+        } else if (nowMs > endMs) {
+            // Event ended
+            return "Event ended";
+        } else {
+            // Event is active
+            var diffMs = endMs - nowMs;
+            var days = Math.floor(diffMs / 86400000);
+            var hours = Math.floor((diffMs % 86400000) / 3600000);
+            var mins = Math.floor((diffMs % 3600000) / 60000);
+            return "Ends in " + days + "d " + hours + "h " + mins + "m";
+        }
     }
 
     Column {
@@ -93,16 +142,34 @@ DraggableDesktopWidget {
                 color: Color.mOnSurface
             }
 
-            NText {
+            Rectangle {
                 width: parent.width
-                horizontalAlignment: Text.AlignHCenter
-                text: root.event && !root.isLoading ? (formatTime(root.event.startAt) + " ~ " + formatTime(root.event.endAt)) : ""
-                font.pointSize: Style.fontSizeS - 1
-                color: Color.mOnSurfaceVariant
+                height: durationLabel.height + 4
+                color: "transparent"
+
+                NText {
+                    id: durationLabel
+                    width: parent.width
+                    horizontalAlignment: Text.AlignHCenter
+                    text: root.event && !root.isLoading ? (formatTime(root.event.startAt) + " ~ " + formatTime(root.event.endAt)) : ""
+                    font.pointSize: Style.fontSizeS - 1
+                    color: Color.mOnSurfaceVariant
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onEntered: {
+                        if (root.event) {
+                            TooltipService.show(parent, root.getCountdownText(), "auto");
+                        }
+                    }
+                    onExited: TooltipService.hide()
+                }
             }
         }
 
-        // 3 & 4. Info + Cards — layout depends on card count
+        // 3 & 4. Info + Cards - layout depends on card count
         // cards <= 3: type+band left, cards right (old layout)
         // cards >  3: type+band in one centered row, cards centered below
 
@@ -134,6 +201,17 @@ DraggableDesktopWidget {
                             fillMode: Image.PreserveAspectFit
                             smooth: true
                             visible: source.toString() !== ""
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onEntered: {
+                                if (root.event && root.event.attribute) {
+                                    TooltipService.show(parent, root.event.attribute.toUpperCase(), "auto");
+                                }
+                            }
+                            onExited: TooltipService.hide()
                         }
                     }
 
@@ -198,6 +276,19 @@ DraggableDesktopWidget {
                             fillMode: Image.PreserveAspectFit
                             smooth: true
                         }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            hoverEnabled: true
+                            onClicked: Qt.openUrlExternally("https://bestdori.com/info/cards/" + modelData.situationId)
+                            onEntered: {
+                                if (modelData.characterName) {
+                                    TooltipService.show(parent, modelData.characterName, "auto");
+                                }
+                            }
+                            onExited: TooltipService.hide()
+                        }
                     }
                 }
             }
@@ -227,6 +318,17 @@ DraggableDesktopWidget {
                         fillMode: Image.PreserveAspectFit
                         smooth: true
                         visible: source.toString() !== ""
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: {
+                            if (root.event && root.event.attribute) {
+                                TooltipService.show(parent, root.event.attribute.toUpperCase(), "auto");
+                            }
+                        }
+                        onExited: TooltipService.hide()
                     }
                 }
 
@@ -277,6 +379,19 @@ DraggableDesktopWidget {
                         sourceSize.height: 38
                         fillMode: Image.PreserveAspectFit
                         smooth: true
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+                        hoverEnabled: true
+                        onClicked: Qt.openUrlExternally("https://bestdori.com/info/cards/" + modelData.situationId)
+                            onEntered: {
+                                if (modelData.characterName) {
+                                    TooltipService.show(parent, modelData.characterName, "auto");
+                                }
+                            }
+                            onExited: TooltipService.hide()
                     }
                 }
             }
